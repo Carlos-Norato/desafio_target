@@ -11,6 +11,7 @@ while (true)
     Console.WriteLine("------------------------------");
     Console.WriteLine("1 - Calcular comissão"); 
     Console.WriteLine("2 - Movimentar estoque");
+    Console.WriteLine("3 - Calcular juros");
     Console.WriteLine("0 - Sair");
     Console.WriteLine();
 
@@ -27,6 +28,10 @@ while (true)
         
         case "2":
             ExecutarEstoque();
+            break;
+
+        case "3":
+            ExecutarJuros();
             break;
 
         case "0":
@@ -155,6 +160,80 @@ static void ExecutarEstoque()
                         Console.WriteLine($"Tipo: {movimentacao.TipoMovimentacao}");
                         Console.WriteLine();
                     }
+                    Console.WriteLine("Pressione ENTER para continuar...");
+                    Console.ReadLine();
+                    break;
+
+                case "0":
+                    return;
+
+                default:
+                    Console.WriteLine("Opção inválida.");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro: {ex.Message}");
+            Console.WriteLine("Pressione ENTER para continuar...");
+            Console.ReadLine();
+        }
+    }
+}
+
+static void ExecutarJuros()
+{
+    var jurosService = new JurosService();
+
+    while (true)
+    {
+        Console.Clear();
+        Console.WriteLine("------------------------------");
+        Console.WriteLine("Cálculo de Juros");
+        Console.WriteLine("------------------------------");
+        Console.WriteLine("1 - Calcular juros simples");
+        Console.WriteLine("2 - Calcular juros composto");
+        Console.WriteLine("0 - Volta ao menu inicial");
+        Console.WriteLine();
+
+        Console.Write("Escolha uma opção: ");
+
+        var opcao = Console.ReadLine();
+
+        try
+        {
+            switch (opcao)
+            {
+                case "1":
+                    Console.Clear();
+                    Console.Write("Digite o valor: ");
+                    decimal valorSimples = decimal.TryParse(Console.ReadLine(), out decimal parsedValorSimples) ? parsedValorSimples : throw new ArgumentException("Valor inválido.");
+
+                    Console.Write("Digite a data de vencimento (dd/mm/yyyy): ");
+                    DateTime dataVencimentoSimples = DateTime.TryParse(Console.ReadLine(), out DateTime parsedDataVencimentoSimples) ? parsedDataVencimentoSimples : throw new ArgumentException("Data inválida.");
+
+                    decimal valorJurosSimples = jurosService.CalcularJurosSimples(valorSimples, dataVencimentoSimples);
+                    Console.WriteLine($"Juros: {valorJurosSimples:C2}");
+                    Console.WriteLine($"Valor total: {(valorSimples + valorJurosSimples):C2}");
+
+                    Console.WriteLine();
+                    Console.WriteLine("Pressione ENTER para continuar..."); 
+                    Console.ReadLine();
+                    break;
+
+                case "2":
+                    Console.Clear();
+                    Console.Write("Digite o valor: ");
+                    decimal valorComposto = decimal.TryParse(Console.ReadLine(), out decimal parsedValorComposto) ? parsedValorComposto : throw new ArgumentException("Valor inválido.");
+
+                    Console.Write("Digite a data de vencimento (dd/mm/yyyy): ");
+                    DateTime dataVencimentoComposto = DateTime.TryParse(Console.ReadLine(), out DateTime parsedDataVencimentoComposto) ? parsedDataVencimentoComposto : throw new ArgumentException("Data inválida.");
+
+                    decimal valorJurosComposto = jurosService.CalcularJurosComposto(valorComposto, dataVencimentoComposto);
+                    Console.WriteLine($"Juros: {valorJurosComposto:C2}");
+                    Console.WriteLine($"Valor total: {(valorComposto + valorJurosComposto):C2}");
+
+                    Console.WriteLine();
                     Console.WriteLine("Pressione ENTER para continuar...");
                     Console.ReadLine();
                     break;
